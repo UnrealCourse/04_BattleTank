@@ -79,7 +79,7 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 		HitLocation,
 		LaunchSpeed,
 		false,
-		0,
+		10,
 		0,
 		ESuggestProjVelocityTraceOption::DoNotTrace // Paramater must be present to prevent bug
 	);
@@ -90,16 +90,18 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 		MoveBarrelTowards(AimDirection);
 	}
 	// If no solution found do nothing
-}
+} 
 
 void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
 	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 
-	// Work-out difference between current barrel roation, and AimDirection
-	auto RotationWithoutRoll = FQuat::FindBetweenVectors(Barrel->GetForwardVector(), AimDirection);
-	auto DeltaRotator = RotationWithoutRoll.Rotator();
-
+	auto AimDirectionAsQuat = AimDirection.ToOrientationQuat();
+	auto BarrelForwardAsQuat = Barrel->GetForwardVector().ToOrientationQuat();
+	
+	auto DeltaQuat = BarrelForwardAsQuat.Inverse() * AimDirectionAsQuat;
+	
+	auto DeltaRotator = DeltaQuat.Rotator();
 	Barrel->Elevate(DeltaRotator.Pitch);
 	Turret->Rotate(DeltaRotator.Yaw);
 }
