@@ -96,14 +96,16 @@ void UTankAimingComponent::MoveBarrelTowards(FVector AimDirection)
 {
 	if (!ensure(Barrel) || !ensure(Turret)) { return; }
 
-	auto AimDirectionAsQuat = AimDirection.ToOrientationQuat();
-	auto BarrelForwardAsQuat = Barrel->GetForwardVector().ToOrientationQuat();
+	auto WorldToTurret = Turret->GetComponentToWorld().Inverse();
+
+	auto AimDirectionInTurretSpace = WorldToTurret.TransformVector(AimDirection);
 	
-	auto DeltaQuat = BarrelForwardAsQuat.Inverse() * AimDirectionAsQuat;
+	auto BarrelInTurretSpace = WorldToTurret.TransformVector(Barrel->GetForwardVector());
+	auto DeltaQuatInTurretSpace = FQuat::FindBetween(BarrelInTurretSpace, AimDirectionInTurretSpace);
 	
-	auto DeltaRotator = DeltaQuat.Rotator();
-	Barrel->Elevate(DeltaRotator.Pitch);
-	Turret->Rotate(DeltaRotator.Yaw);
+	UE_LOG(LogTemp, Warning, TEXT("DeltaQuatInTurretSpace %s"), *DeltaQuatInTurretSpace.Rotator().ToString());
+	Barrel->Elevate(DeltaQuatInTurretSpace.Rotator().Pitch);
+	Turret->Rotate(DeltaQuatInTurretSpace.Rotator().Yaw);
 }
 
 void UTankAimingComponent::Fire()
