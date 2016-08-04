@@ -19,13 +19,24 @@ public:
 	void SetThrottle(float Throttle);
 	
 	// Max force per track, in Newtons
-	UPROPERTY(EditDefaultsOnly)
-	float TrackMaxDrivingForce = 400000; // Assume 40 tonne tank, and 1g accelleration
+    UPROPERTY(EditDefaultsOnly)
+    float TrackMaxDrivingForce = 400000; // Assume 40 tonne tank, and 1g accelleration
+    UPROPERTY(EditDefaultsOnly)
+    float SpringForce = 5;
+    UPROPERTY(EditDefaultsOnly)
+    float SpringDamping = 5;
+    UPROPERTY(EditDefaultsOnly)
+    float SpringOffset = 2;
+    UPROPERTY(EditDefaultsOnly)
+    float SpringLength = 2;
+    
 
 private:
 	UTankTrack();
 
 	virtual void BeginPlay() override;
+    
+    virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
 
 	void ApplySidewaysForce();
 
@@ -35,4 +46,6 @@ private:
 	void DriveTrack();
 
 	float CurrentThrottle = 0;
+    
+    float PreviousDisplacement = 0;
 };
