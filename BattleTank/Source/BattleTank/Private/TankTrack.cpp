@@ -25,8 +25,8 @@ void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
     bool isInContact = false;
-    isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringFrontOffset * GetForwardVector());
-    isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringRearOffset * GetForwardVector());
+    isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringHeightOffset * GetUpVector() + SpringFrontOffset * GetForwardVector());
+    isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringHeightOffset * GetUpVector() + SpringRearOffset * GetForwardVector());
    
     if (isInContact){
         
@@ -41,7 +41,7 @@ bool UTankTrack::ApplySpringForce(float DeltaTime, FVector LocalOffset)
 {
     UE_LOG(LogTemp, Warning, TEXT("TickComponent"));
     auto Start = GetComponentLocation() + LocalOffset;
-    auto End = Start - SpringLength * GetUpVector();
+    auto End = Start - (SpringLength + SpringStop) * GetUpVector();
     FHitResult OutHit;
     UE_LOG(LogTemp, Warning, TEXT("Start: %s, End: %s"), *Start.ToString(), *End.ToString());
     if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility)) {
@@ -49,7 +49,8 @@ bool UTankTrack::ApplySpringForce(float DeltaTime, FVector LocalOffset)
         UE_LOG(LogTemp, Warning, TEXT("Trace hit: %s"), *HitString);
         auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
         
-        auto Displacement = SpringLength - OutHit.Distance;
+        auto Displacement = SpringLength - (OutHit.Distance - SpringStop);
+        Displacement = FMath::Clamp<float>(Displacement, 0, SpringLength);
         UE_LOG(LogTemp, Warning, TEXT("ImpactPoint: %s"), *OutHit.ImpactPoint.ToString());
         
         DrawDebugPoint(GetWorld(), OutHit.ImpactPoint, 2, FColor::Blue, false, 0, 232);

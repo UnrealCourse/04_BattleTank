@@ -20,19 +20,23 @@ public:
 	
 	// Max force per track, in Newtons
     UPROPERTY(EditDefaultsOnly)
-    float TrackMaxDrivingForce = 400000; // Assume 40 tonne tank, and 1g accelleration
+    float TrackMaxDrivingForce = 60000000.0; // Assume 40 tonne tank, and 1g accelleration
     UPROPERTY(EditDefaultsOnly)
-    float SpringForce = 5;
+    float SpringForce = 100000.0;
     UPROPERTY(EditDefaultsOnly)
-    float SpringDamping = 5;
+    float SpringDamping = -10000.0;
     UPROPERTY(EditDefaultsOnly)
-    float SpringSideOffset = 2;
+    float SpringSideOffset = 200.0;
     UPROPERTY(EditDefaultsOnly)
-    float SpringRearOffset = 2;
+    float SpringRearOffset = -300.0;
     UPROPERTY(EditDefaultsOnly)
-    float SpringFrontOffset = 2;
+    float SpringFrontOffset = 200.0;
     UPROPERTY(EditDefaultsOnly)
-    float SpringLength = 2;
+    float SpringHeightOffset = 200.0;
+    UPROPERTY(EditDefaultsOnly)
+    float SpringStop = 100.0;
+    UPROPERTY(EditDefaultsOnly)
+    float SpringLength = 300.0;
     
 
 private:
