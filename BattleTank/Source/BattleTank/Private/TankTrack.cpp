@@ -20,17 +20,13 @@ void UTankTrack::BeginPlay()
 
 void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	DriveTrack();
-	ApplySidewaysForce();
-	CurrentThrottle = 0;
 }
 
 void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
     UE_LOG(LogTemp, Warning, TEXT("TickComponent"));
-    auto Start = GetComponentLocation() + GetForwardVector() * SpringOffset + GetUpVector() * SpringLength;
+    auto Start = GetComponentLocation() + SpringOffset * GetRightVector();
     auto End = Start - SpringLength * GetUpVector();
-    DrawDebugLine(GetWorld(), Start, End, FColor(255,0,255), false, 2, 10, 2);
     FHitResult OutHit;
     UE_LOG(LogTemp, Warning, TEXT("Start: %s, End: %s"), *Start.ToString(), *End.ToString());
     if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility)) {
@@ -38,14 +34,28 @@ void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActor
         UE_LOG(LogTemp, Warning, TEXT("Trace hit: %s"), *HitString);
         auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
         
-        auto Displacement = SpringLength * 2 - OutHit.Distance;
+        auto Displacement = SpringLength - OutHit.Distance;
+        UE_LOG(LogTemp, Warning, TEXT("ImpactPoint: %s"), *OutHit.ImpactPoint.ToString());
+
+        DrawDebugPoint(GetWorld(), OutHit.ImpactPoint, 2, FColor::Blue, false, 0, 232);
         auto DeltaDisplacement = Displacement - PreviousDisplacement;
         PreviousDisplacement = Displacement;
+        UE_LOG(LogTemp, Warning, TEXT("Distance: %f"), OutHit.Distance);
+
         UE_LOG(LogTemp, Warning, TEXT("Displacement: %f"), Displacement);
         auto Speed = DeltaDisplacement/DeltaTime;
         UE_LOG(LogTemp, Warning, TEXT("Speed: %f"), Speed);
         auto ForceMagnitude = SpringForce * Displacement - SpringDamping * Speed;
-        TankRoot->AddForceAtLocation(ForceMagnitude * GetUpVector(), Start);
+        UE_LOG(LogTemp, Warning, TEXT("ForceMag: %f"), ForceMagnitude);
+        auto Force = ForceMagnitude * GetUpVector();
+        DrawDebugLine(GetWorld(), Start, Start + Force/SpringForce, FColor(255,0,255), false, 0, -10, 2);
+
+        TankRoot->AddForceAtLocation(Force, Start);
+        
+        DriveTrack();
+        ApplySidewaysForce();
+        CurrentThrottle = 0;
+
     }
 }
 
@@ -69,6 +79,8 @@ void UTankTrack::SetThrottle(float Throttle)
 
 void UTankTrack::DriveTrack()
 {
+    UE_LOG(LogTemp, Warning, TEXT("Applying Drive force: %f"), CurrentThrottle * TrackMaxDrivingForce);
+
 	auto ForceApplied = GetForwardVector() * CurrentThrottle * TrackMaxDrivingForce;
 	auto ForceLocation = GetComponentLocation();
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
