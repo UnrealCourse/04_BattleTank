@@ -24,8 +24,23 @@ void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 
 void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
+    bool isInContact = false;
+    isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringFrontOffset * GetForwardVector());
+    isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringRearOffset * GetForwardVector());
+   
+    if (isInContact){
+        
+        DriveTrack();
+        ApplySidewaysForce();
+        CurrentThrottle = 0;
+
+    }
+}
+
+bool UTankTrack::ApplySpringForce(float DeltaTime, FVector LocalOffset)
+{
     UE_LOG(LogTemp, Warning, TEXT("TickComponent"));
-    auto Start = GetComponentLocation() + SpringOffset * GetRightVector();
+    auto Start = GetComponentLocation() + LocalOffset;
     auto End = Start - SpringLength * GetUpVector();
     FHitResult OutHit;
     UE_LOG(LogTemp, Warning, TEXT("Start: %s, End: %s"), *Start.ToString(), *End.ToString());
@@ -36,12 +51,12 @@ void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActor
         
         auto Displacement = SpringLength - OutHit.Distance;
         UE_LOG(LogTemp, Warning, TEXT("ImpactPoint: %s"), *OutHit.ImpactPoint.ToString());
-
+        
         DrawDebugPoint(GetWorld(), OutHit.ImpactPoint, 2, FColor::Blue, false, 0, 232);
         auto DeltaDisplacement = Displacement - PreviousDisplacement;
         PreviousDisplacement = Displacement;
         UE_LOG(LogTemp, Warning, TEXT("Distance: %f"), OutHit.Distance);
-
+        
         UE_LOG(LogTemp, Warning, TEXT("Displacement: %f"), Displacement);
         auto Speed = DeltaDisplacement/DeltaTime;
         UE_LOG(LogTemp, Warning, TEXT("Speed: %f"), Speed);
@@ -49,14 +64,13 @@ void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActor
         UE_LOG(LogTemp, Warning, TEXT("ForceMag: %f"), ForceMagnitude);
         auto Force = ForceMagnitude * GetUpVector();
         DrawDebugLine(GetWorld(), Start, Start + Force/SpringForce, FColor(255,0,255), false, 0, -10, 2);
-
+        
         TankRoot->AddForceAtLocation(Force, Start);
         
-        DriveTrack();
-        ApplySidewaysForce();
-        CurrentThrottle = 0;
-
+        return true;
     }
+    
+    return false;
 }
 
 void UTankTrack::ApplySidewaysForce()
