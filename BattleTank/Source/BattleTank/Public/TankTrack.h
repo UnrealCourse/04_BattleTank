@@ -18,34 +18,41 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void SetThrottle(float Throttle);
 	
+private:
 	// Max force per track, in Newtons
     UPROPERTY(EditDefaultsOnly)
-    float TrackMaxDrivingForce = 60000000.0; // Assume 40 tonne tank, and 1g accelleration
-    UPROPERTY(EditDefaultsOnly)
+    float TrackMaxDrivingForce = 60000000.0;
+  
+	UPROPERTY(EditDefaultsOnly)
     float SpringForce = 100000.0;
-    UPROPERTY(EditDefaultsOnly)
+    
+	UPROPERTY(EditDefaultsOnly)
     float SpringDamping = -10000.0;
-    UPROPERTY(EditDefaultsOnly)
+    
+	UPROPERTY(EditDefaultsOnly)
     float SpringSideOffset = 200.0;
-    UPROPERTY(EditDefaultsOnly)
+    
+	UPROPERTY(EditDefaultsOnly)
     float SpringRearOffset = -300.0;
-    UPROPERTY(EditDefaultsOnly)
+    
+	UPROPERTY(EditDefaultsOnly)
     float SpringFrontOffset = 200.0;
-    UPROPERTY(EditDefaultsOnly)
+    
+	UPROPERTY(EditDefaultsOnly)
     float SpringHeightOffset = 200.0;
-    UPROPERTY(EditDefaultsOnly)
+    
+	UPROPERTY(EditDefaultsOnly)
     float SpringStop = 100.0;
-    UPROPERTY(EditDefaultsOnly)
+    
+	UPROPERTY(EditDefaultsOnly)
     float SpringLength = 300.0;
     
-
-private:
 	UTankTrack();
 
 	virtual void BeginPlay() override;
     
     virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction) override;
-    
+ 
     bool ApplySpringForce(float DeltaTime, FVector LocalOffset);
     
 	void ApplySidewaysForce();
@@ -53,7 +60,7 @@ private:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
-	void DriveTrack();
+	void ApplyDrivingForce();
 
 	float CurrentThrottle = 0;
     

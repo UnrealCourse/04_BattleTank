@@ -5,15 +5,15 @@
 
 UTankTrack::UTankTrack()
 {
-    UE_LOG(LogTemp, Warning, TEXT("UTankTrack"));
+	UE_LOG(LogTemp, Warning, TEXT("UTankTrack"));
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
 void UTankTrack::BeginPlay()
 {
-    PrimaryComponentTick.bCanEverTick = true;
-    FString canTickString = PrimaryComponentTick.bCanEverTick ? "true" : "false";
-    UE_LOG(LogTemp, Warning, TEXT("BeginPLay, bCanEverTick: %s"), *canTickString);
+	PrimaryComponentTick.bCanEverTick = true;
+	FString canTickString = PrimaryComponentTick.bCanEverTick ? "true" : "false";
+	UE_LOG(LogTemp, Warning, TEXT("BeginPLay, bCanEverTick: %s"), *canTickString);
 
 	OnComponentHit.AddDynamic(this, &UTankTrack::OnHit);
 }
@@ -24,67 +24,58 @@ void UTankTrack::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 
 void UTankTrack::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
-    bool isInContact = false;
-    isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringHeightOffset * GetUpVector() + SpringFrontOffset * GetForwardVector());
-    isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringHeightOffset * GetUpVector() + SpringRearOffset * GetForwardVector());
+	bool isInContact = false; // wrong level of abstraction here
+	
+	// below has side-effects, it's not jsut asking a question, it's already applied the force
+	isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringHeightOffset * GetUpVector() + SpringFrontOffset * GetForwardVector());
+	isInContact |= ApplySpringForce(DeltaTime, SpringSideOffset * GetRightVector() + SpringHeightOffset * GetUpVector() + SpringRearOffset * GetForwardVector());
    
-    if (isInContact){
-        
-        DriveTrack();
-        ApplySidewaysForce();
-        CurrentThrottle = 0;
-
-    }
+	if (isInContact) { // If any are in contact, but only those that are shoud apply forces
+		// ApplySuspensionForce();
+		ApplyDrivingForce();
+		ApplySidewaysForce();
+	}
 }
 
 bool UTankTrack::ApplySpringForce(float DeltaTime, FVector LocalOffset)
 {
-    UE_LOG(LogTemp, Warning, TEXT("TickComponent"));
-    auto Start = GetComponentLocation() + LocalOffset;
-    auto End = Start - (SpringLength + SpringStop) * GetUpVector();
-    FHitResult OutHit;
-    UE_LOG(LogTemp, Warning, TEXT("Start: %s, End: %s"), *Start.ToString(), *End.ToString());
-    if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility)) {
-        auto HitString = OutHit.Component->GetName();
-        UE_LOG(LogTemp, Warning, TEXT("Trace hit: %s"), *HitString);
-        auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-        
-        auto Displacement = SpringLength - (OutHit.Distance - SpringStop);
-        Displacement = FMath::Clamp<float>(Displacement, 0, SpringLength);
-        UE_LOG(LogTemp, Warning, TEXT("ImpactPoint: %s"), *OutHit.ImpactPoint.ToString());
-        
-        DrawDebugPoint(GetWorld(), OutHit.ImpactPoint, 2, FColor::Blue, false, 0, 232);
-        auto DeltaDisplacement = Displacement - PreviousDisplacement;
-        PreviousDisplacement = Displacement;
-        UE_LOG(LogTemp, Warning, TEXT("Distance: %f"), OutHit.Distance);
-        
-        UE_LOG(LogTemp, Warning, TEXT("Displacement: %f"), Displacement);
-        auto Speed = DeltaDisplacement/DeltaTime;
-        UE_LOG(LogTemp, Warning, TEXT("Speed: %f"), Speed);
-        auto ForceMagnitude = SpringForce * Displacement - SpringDamping * Speed;
-        UE_LOG(LogTemp, Warning, TEXT("ForceMag: %f"), ForceMagnitude);
-        auto Force = ForceMagnitude * GetUpVector();
-        DrawDebugLine(GetWorld(), Start, Start + Force/SpringForce, FColor(255,0,255), false, 0, -10, 2);
-        
-        TankRoot->AddForceAtLocation(Force, Start);
-        
-        return true;
-    }
-    
-    return false;
+	auto Start = GetComponentLocation() + LocalOffset;
+	auto End = Start - (SpringLength + SpringStop) * GetUpVector(); // TODO clamp?
+
+	FHitResult OutHit;
+	auto bTrackIsInContact = GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility);
+	DrawDebugPoint(GetWorld(), OutHit.ImpactPoint, 2, FColor::Blue, false, 0, 232);
+
+	if (bTrackIsInContact) {
+		auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+
+		auto Displacement = SpringLength - (OutHit.Distance - SpringStop);
+		Displacement = FMath::Clamp<float>(Displacement, 0, SpringLength);
+		auto DeltaDisplacement = Displacement - PreviousDisplacement;
+		PreviousDisplacement = Displacement;
+
+		auto Speed = DeltaDisplacement / DeltaTime;
+		auto ForceMagnitude = SpringForce * Displacement - SpringDamping * Speed;
+		auto Force = ForceMagnitude * GetUpVector();
+		TankRoot->AddForceAtLocation(Force, Start);
+
+		DrawDebugLine(GetWorld(), Start, Start + Force/SpringForce, FColor(255,0,255), false, 0, -10, 2);
+		return true; // EEeew
+	}
+	return false;
 }
 
 void UTankTrack::ApplySidewaysForce()
 {
-// Work-out the required acceleration this frame to correct
-auto SlippageSpeed = FVector::DotProduct(GetRightVector(), GetComponentVelocity());
-auto DeltaTime = GetWorld()->GetDeltaSeconds();
-auto CorrectionAcceleration = -SlippageSpeed / DeltaTime * GetRightVector();
+	// Work-out the required acceleration this frame to correct
+	auto SlippageSpeed = FVector::DotProduct(GetRightVector(), GetComponentVelocity());
+	auto DeltaTime = GetWorld()->GetDeltaSeconds();
+	auto CorrectionAcceleration = -SlippageSpeed / DeltaTime * GetRightVector();
 
-// Calculate and apply sideways (F = m a)
-auto TankRoot = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
-auto CorrectionForce = (TankRoot->GetMass() * CorrectionAcceleration) / 2; // Two tracks
-TankRoot->AddForce(CorrectionForce);
+	// Calculate and apply sideways F = m a
+	auto TankRoot = Cast<UStaticMeshComponent>(GetOwner()->GetRootComponent());
+	auto CorrectionForce = (TankRoot->GetMass() * CorrectionAcceleration) / 2; // Two tracks
+	TankRoot->AddForce(CorrectionForce);
 }
 
 void UTankTrack::SetThrottle(float Throttle)
@@ -92,12 +83,13 @@ void UTankTrack::SetThrottle(float Throttle)
 	CurrentThrottle = FMath::Clamp<float>(CurrentThrottle + Throttle, -1, 1);
 }
 
-void UTankTrack::DriveTrack()
+void UTankTrack::ApplyDrivingForce()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Applying Drive force: %f"), CurrentThrottle * TrackMaxDrivingForce);
+	UE_LOG(LogTemp, Warning, TEXT("Applying Drive force: %f"), CurrentThrottle * TrackMaxDrivingForce);
 
 	auto ForceApplied = GetForwardVector() * CurrentThrottle * TrackMaxDrivingForce;
 	auto ForceLocation = GetComponentLocation();
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	TankRoot->AddForceAtLocation(ForceApplied, ForceLocation);
+	CurrentThrottle = 0; // "consume" throttle input
 }
