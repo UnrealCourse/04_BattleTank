@@ -744,6 +744,3 @@ In this section we covered...
 + Add a 1st person camera
 + Use the Toggle Visibility Blueprint node
 + Bind input and enjoy simple camera swapping.
-
----
-Find out more about our [Unreal Engine Developer Course](https://www.udemy.com/unrealcourse/?couponCode=GitHubDiscount).
