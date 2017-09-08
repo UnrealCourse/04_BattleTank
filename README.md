@@ -102,7 +102,7 @@
 + Set the tank as the Default Pawn 
 + Setup PlayerStart and debug start collisions.
 
-### 3rd Person Camera Control ###
+### 14 3rd Person Camera Control ###
 
 + Horizontal Coordinate System
 + Setup a Camera Spring Arm 
