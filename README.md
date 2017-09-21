@@ -1,4 +1,4 @@
-### Intro, Notes & Section 4 Assets ###
+### 1 Intro, Notes & Section 4 Assets ###
 
 + Battle Tank is an open world tank fight
 + This will be a head to head battle 
