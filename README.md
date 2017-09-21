@@ -309,14 +309,14 @@
 + Wire it to the aiming component 
 + Test barrel elevation works.
 
-### CHALLENGE - Turret Rotation ###
+### 43 CHALLENGE - Turret Rotation ###
 
 This mid-section challenge will help you integrate your knowledge and really
 cement what you’ve done in the past few lectures. It will also give you a
 great foundation of practical understanding on which to build. Please give it
 a good shot before watching my solution.
 
-### CHALLENGE - Turret Rotation Pt.2 ###
+### 44 CHALLENGE - Turret Rotation Pt.2 ###
 
 This is the 2nd part of the solution to this section’s longer challenge. We’ll
 be finishing off the turret rotation, giving us complete barrel aiming control
