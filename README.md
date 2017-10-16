@@ -160,12 +160,26 @@
 + Creating a custom Player Controller class 
 + Re-parenting Blueprint classes onto our C++
 
-### Using virtual and override ###
+### 22 Using virtual and override ###
 
 + A virtual method can be overridden by children
 + The override keyword is a sanity check 
 + Use Super:: to include parents’ functionality 
 + Use this to add BeginPlay() to PlayerController.
+
+### 22b Dynamic vs Static Polymorphism ###
+
++ What is static polymorphism?
++ How is it used?
++ What is dynamic polymorphism?
++ How is that used?
+
+### 22c Dynamic Polymorphism & Vtables ###
+
++ How methods are called.
++ Why we need the virtual method.
++ How Vtables implement this.
++ See how the assembly changes.
 
 ### Creating an AI Controller Class ###
 
