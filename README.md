@@ -250,7 +250,7 @@
 + Use **SuggestProjectileVelocity()** in Unreal
 + Work out where a projectile will land.
 
-### Using FRotators in Unreal ###
+### 35 Using FRotators in Unreal ###
 
 + A FRotaor is a struct
 + It contains Roll, Pitch and Yaw as floats 
@@ -258,7 +258,16 @@
 + Report aim direction as a rotator 
 + Log result to the console in Unreal.
 
-### Using Forward Declarations ###
+### 35b The C++ Compilation Process ###
+
++ More about the Unreal Header Tool (UHT)
++ Pre-processing happens first, e.g. on macros 
++ Then compilation produces .obj files 
++ These .obj files are linked by the linker 
++ How to #include strategically.
+
+
+### 36 Using Forward Declarations ###
 
 + If we #include in a .h file we create a “chain”
 + Any .h file that includes us will in-turn include
@@ -273,14 +282,6 @@
 + Static mesh components don’t appear by default 
 + Use **BlueprintSpawnableComponent** annotation 
 + Using **hidecategories = ("CategoryName")**
-
-### The C++ Compilation Process ###
-
-+ More about the Unreal Header Tool (UHT)
-+ Pre-processing happens first, e.g. on macros 
-+ Then compilation produces .obj files 
-+ These .obj files are linked by the linker 
-+ How to #include strategically.
 
 ### Review Our Execution Flow ###
 
