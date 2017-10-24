@@ -167,12 +167,11 @@
 + Use Super:: to include parents’ functionality 
 + Use this to add BeginPlay() to PlayerController.
 
-### 22b Dynamic vs Static Polymorphism ###
+### 22b Overloading and Polymorphism ###
 
-+ What is static polymorphism?
-+ How is it used?
-+ What is dynamic polymorphism?
-+ How is that used?
++ What is polymorphism?
++ How to overload functions.
++ Using run-time polymorphism.
 
 ### 22c Dynamic Polymorphism & Vtables ###
 
