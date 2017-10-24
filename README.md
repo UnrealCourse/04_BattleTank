@@ -173,7 +173,7 @@
 + How to overload functions.
 + Using run-time polymorphism.
 
-### 22c Dynamic Polymorphism & Vtables ###
+### 22c Virtual Functions and Vtables ###
 
 + How methods are called.
 + Why we need the virtual method.
