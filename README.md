@@ -590,14 +590,14 @@ by the end :-)
 + Remember to set the boolean in the constructor 
 + **GetWorld()->GetTimeSeconds()** alternative.
 
-### Are Two Floats Equal? ###
+### 79 Are Two Floats Equal? ###
 
 + FVectors are just structs containing float
 + You must “define equal” when comparing floats
 + The **FVector::Equals()** method allows this
 + Specify a tolerance, see docs in resources.
 
-### Programmatic Sideways Friction ###
+### 80 Programmatic Sideways Friction ###
 
 + We can apply a sideways correction force
 + Remember Force = Mass * Acceleration
@@ -605,7 +605,7 @@ by the end :-)
 + So we calculate the force using the slippage speed,the frame time, and the tank mass
 + A way to calculate is **FVector::DotProduct()**
 
-### OnComponentHit Event in 4.12 ###
+### 81 OnComponentHit Event in 4.12 ###
 
 + We could use OnComponentHit in Blueprint
 + But we’re grown-ups so we’re going to use C++
