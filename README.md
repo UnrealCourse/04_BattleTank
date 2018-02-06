@@ -1,3 +1,5 @@
+**Note for users of UE 4.16+:** you will need to update the build files for the project to run. You can see an example of what needs changing is [this upgrade commit](https://github.com/UnrealCourse/04_BattleTank/commit/00ac31d53915f83680628732c0fbd52cd9e527ec).
+
 ### 1 Intro, Notes & Section 4 Assets ###
 
 + Battle Tank is an open world tank fight
