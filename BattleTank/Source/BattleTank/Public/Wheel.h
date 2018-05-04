@@ -16,7 +16,6 @@ class BATTLETANK_API UWheel : public USphereComponent
 public:	
 	// Sets default values for this component's properties
 	UWheel();
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void AddForwardForce(float Force);
 
@@ -25,6 +24,8 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	void SetupAxle();
+
 	UPhysicsConstraintComponent * NewConstraint(
 		UPrimitiveComponent* RootComponent, 
 		const FConstraintInstance& ConstraintSetup, 
