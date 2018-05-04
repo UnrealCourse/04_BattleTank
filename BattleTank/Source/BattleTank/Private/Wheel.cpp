@@ -12,6 +12,7 @@ UWheel::UWheel()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
+	// Set mass to 1kg
 	SetMassOverrideInKg(NAME_None, 1, true);
 	SetCollisionProfileName(TEXT("PhysicsActor"));
 	SetSimulatePhysics(true);
@@ -26,30 +27,35 @@ void UWheel::BeginPlay()
 	auto RootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	if (!RootComponent) return;
 
-	Axel = NewObject<USphereComponent>(this);
-	Axel->RegisterComponent();
+	Axle = NewObject<USphereComponent>(this);
+	Axle->RegisterComponent();
 	
-	Axel->SetWorldLocation(GetComponentLocation());
+	Axle->SetWorldLocation(GetComponentLocation());
+	Axle->SetSimulatePhysics(true);
+	Axle->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	Axle->SetMassOverrideInKg(NAME_None, 1, true);
 
-	SuspensionConstraint = NewObject<UPhysicsConstraintComponent>(this);
-	SuspensionConstraint->RegisterComponent();
-	AxelConstraint = NewObject<UPhysicsConstraintComponent>(this);
-	AxelConstraint->RegisterComponent();
-	
-	SuspensionConstraint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	SuspensionConstraint->SetWorldLocation(GetComponentLocation());
-	AxelConstraint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	AxelConstraint->SetWorldLocation(GetComponentLocation());
+	SuspensionConstraint = NewConstraint(RootComponent, SuspensionConstraintSetup, RootComponent, Axle);
+	AxleConstraint = NewConstraint(RootComponent, AxleConstraintSetup, Axle, this);
+}
 
-	SuspensionConstraint->ConstraintInstance = SuspensionConstraintSetup;
-	AxelConstraint->ConstraintInstance = AxelConstraintSetup;
+UPhysicsConstraintComponent* UWheel::NewConstraint(
+	UPrimitiveComponent* RootComponent,
+	const FConstraintInstance& ConstraintSetup,
+	UPrimitiveComponent* Component1,
+	UPrimitiveComponent* Component2
+) 
+{
+	auto Constraint = NewObject<UPhysicsConstraintComponent>(this);
+	Constraint->RegisterComponent();
 
-	Axel->SetSimulatePhysics(true);
-	Axel->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	Axel->SetMassOverrideInKg(NAME_None, 1, true);
+	Constraint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	Constraint->SetWorldLocation(GetComponentLocation());
 
-	SuspensionConstraint->SetConstrainedComponents(RootComponent, NAME_None, Axel, NAME_None);
-	AxelConstraint->SetConstrainedComponents(Axel, NAME_None, this, NAME_None);
+	Constraint->ConstraintInstance = ConstraintSetup;
+
+	Constraint->SetConstrainedComponents(Component1, NAME_None, Component2, NAME_None);
+	return Constraint;
 }
 
 
@@ -68,5 +74,5 @@ void UWheel::AddForwardForce(float Force)
 	float ForceMagnitude = LinearForce.Size();
 	float MaxForce = DrivingFriction * ForceMagnitude;
 	float CappedForce = FMath::Min(MaxForce, Force);
-	AddForce(Axel->GetForwardVector() * CappedForce);
+	AddForce(Axle->GetForwardVector() * CappedForce);
 }

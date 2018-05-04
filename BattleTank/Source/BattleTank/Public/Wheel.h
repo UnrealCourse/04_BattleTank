@@ -16,6 +16,7 @@ class BATTLETANK_API UWheel : public USphereComponent
 public:	
 	// Sets default values for this component's properties
 	UWheel();
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void AddForwardForce(float Force);
 
@@ -23,23 +24,27 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+private:
+	UPhysicsConstraintComponent * NewConstraint(
+		UPrimitiveComponent* RootComponent, 
+		const FConstraintInstance& ConstraintSetup, 
+		UPrimitiveComponent* Component1, 
+		UPrimitiveComponent* Component2
+	);
 
+	//config
 	UPROPERTY(EditAnywhere)
 	float DrivingFriction = 1;
+	UPROPERTY(EditDefaultsOnly) 
+	FConstraintInstance SuspensionConstraintSetup;
+	UPROPERTY(EditDefaultsOnly) 
+	FConstraintInstance AxleConstraintSetup;
 
+	//references
 	UPROPERTY(VisibleAnywhere)
-	USphereComponent* Axel;
+	USphereComponent* Axle;
 	UPROPERTY(VisibleAnywhere)
 	UPhysicsConstraintComponent* SuspensionConstraint;
 	UPROPERTY(VisibleAnywhere)
-	UPhysicsConstraintComponent* AxelConstraint;
-
-	UPROPERTY(EditDefaultsOnly)
-	FConstraintInstance SuspensionConstraintSetup;
-	UPROPERTY(EditDefaultsOnly)
-	FConstraintInstance AxelConstraintSetup;
-
+	UPhysicsConstraintComponent* AxleConstraint;
 };
