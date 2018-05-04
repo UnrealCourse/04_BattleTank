@@ -17,6 +17,8 @@ public:
 	// Sets default values for this component's properties
 	UWheel();
 
+	void AddForwardForce(float Force);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -24,6 +26,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UPROPERTY(EditAnywhere)
+	float DrivingFriction = 1;
 
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent* Axel;

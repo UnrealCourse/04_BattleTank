@@ -61,3 +61,12 @@ void UWheel::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponent
 	// ...
 }
 
+void UWheel::AddForwardForce(float Force)
+{
+	FVector LinearForce, AngularForce;
+	SuspensionConstraint->GetConstraintForce(LinearForce, AngularForce);
+	float ForceMagnitude = LinearForce.Size();
+	float MaxForce = DrivingFriction * ForceMagnitude;
+	float CappedForce = FMath::Min(MaxForce, Force);
+	AddForce(Axel->GetForwardVector() * CappedForce);
+}
