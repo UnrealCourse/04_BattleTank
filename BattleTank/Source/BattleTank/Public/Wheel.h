@@ -4,17 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
-#include "WheelSocket.generated.h"
+#include "PhysicsEngine/ConstraintInstance.h"
 
+#include "Wheel.generated.h"
 
 UCLASS( ClassGroup=(Custom), Blueprintable, meta=(BlueprintSpawnableComponent) )
-class BATTLETANK_API UWheelSocket : public USceneComponent
+class BATTLETANK_API UWheel : public USphereComponent
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UWheelSocket();
+	UWheel();
 
 protected:
 	// Called when the game starts
@@ -24,6 +25,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
-	
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* Axel;
+	UPROPERTY(VisibleAnywhere)
+	UPhysicsConstraintComponent* SuspensionConstraint;
+	UPROPERTY(VisibleAnywhere)
+	UPhysicsConstraintComponent* AxelConstraint;
+
+	UPROPERTY(EditDefaultsOnly)
+	FConstraintInstance SuspensionConstraintSetup;
+	UPROPERTY(EditDefaultsOnly)
+	FConstraintInstance AxelConstraintSetup;
+
 };
