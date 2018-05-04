@@ -3,6 +3,8 @@
 #include "BattleTank.h"
 #include "TankTrack.h"
 
+#include "Wheel.h"
+
 UTankTrack::UTankTrack()
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -44,4 +46,10 @@ void UTankTrack::DriveTrack()
 	auto ForceLocation = GetComponentLocation();
 	auto TankRoot = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	//TankRoot->AddForceAtLocation	(ForceApplied, ForceLocation);
+}
+
+void UTankTrack::OnChildAttached(USceneComponent * ChildComponent)
+{
+	UWheel* Wheel = Cast<UWheel>(ChildComponent);
+	Wheels.Add(Wheel);
 }

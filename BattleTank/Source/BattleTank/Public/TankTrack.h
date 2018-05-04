@@ -22,6 +22,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float TrackMaxDrivingForce = 400000; // Assume 40 tonne tank, and 1g accelleration
 
+	virtual void OnChildAttached(USceneComponent * ChildComponent) override;
 private:
 	UTankTrack();
 
@@ -35,4 +36,7 @@ private:
 	void DriveTrack();
 
 	float CurrentThrottle = 0;
+
+	UPROPERTY()
+	TArray<class UWheel*> Wheels;
 };

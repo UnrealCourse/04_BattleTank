@@ -41,14 +41,12 @@ void UWheel::BeginPlay()
 	AxelConstraint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	AxelConstraint->SetWorldLocation(GetComponentLocation());
 
-
 	SuspensionConstraint->ConstraintInstance = SuspensionConstraintSetup;
 	AxelConstraint->ConstraintInstance = AxelConstraintSetup;
 
 	Axel->SetSimulatePhysics(true);
 	Axel->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	Axel->SetMassOverrideInKg(NAME_None, 1, true);
-	//DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 
 	SuspensionConstraint->SetConstrainedComponents(RootComponent, NAME_None, Axel, NAME_None);
 	AxelConstraint->SetConstrainedComponents(Axel, NAME_None, this, NAME_None);
