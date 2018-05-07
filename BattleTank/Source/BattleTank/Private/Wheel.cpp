@@ -33,7 +33,8 @@ UWheel::UWheel()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.TickGroup = TG_PostPhysics;
 
 	// Set mass to 1kg
 	SetMassOverrideInKg(NAME_None, 1, true);
@@ -43,11 +44,7 @@ UWheel::UWheel()
 
 void UWheel::AddForwardForce(float Force)
 {
-	FVector LinearForce, AngularForce;
-	SuspensionConstraint->GetConstraintForce(LinearForce, AngularForce);
-	float MaxForce = DrivingFriction * LinearForce.Size();
-	float CappedForce = FMath::Min(MaxForce, Force);
-	AddForce(Axle->GetForwardVector() * CappedForce);
+	RequestedForce += Force;
 }
 
 // Called when the game starts
@@ -56,6 +53,9 @@ void UWheel::BeginPlay()
 	Super::BeginPlay();
 
 	SetupAxle();
+
+	SetNotifyRigidBodyCollision(true);
+	OnComponentHit.AddDynamic(this, &UWheel::OnHit);
 
 	auto RootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	if (RootComponent)
@@ -92,4 +92,29 @@ UPhysicsConstraintComponent* UWheel::NewConstraint(
 
 	Constraint->SetConstrainedComponents(Component1, NAME_None, Component2, NAME_None);
 	return Constraint;
+}
+
+
+void UWheel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	float MaxForce = DrivingFriction * NormalImpulse.Size();
+	float CappedForce = FMath::Clamp(RequestedForce, -MaxForce, MaxForce);
+	AddForce(Axle->GetRightVector() ^ Hit.Normal * CappedForce);
+
+	
+
+	UE_LOG(LogTemp, Warning, TEXT("HIT: NormalImpulse %f Normal %f ImpactNormal %f"), NormalImpulse.Size(), Hit.Normal.Size(), Hit.ImpactNormal.Size())
+}
+
+void UWheel::TickComponent
+(
+	float DeltaTime,
+	enum ELevelTick TickType,
+	FActorComponentTickFunction * ThisTickFunction
+)
+{
+	if (GetWorld()->TickGroup == TG_PostPhysics)
+	{
+		RequestedForce = 0;
+	}
 }
