@@ -42,15 +42,14 @@ void ATank::Tick
 {
 	Super::Tick(DeltaSeconds);
 
-	auto Drag = DragCoefficient * - GetVelocity().SizeSquared() * GetVelocity().GetSafeNormal();
 	auto BodyComponent = Cast<UPrimitiveComponent>(GetRootComponent());
 	if (BodyComponent)
 	{
+		auto Drag = DragCoefficient * -GetVelocity().SizeSquared() * GetVelocity().GetSafeNormal();
 		BodyComponent->AddForce(Drag);
 
 		auto AngularVelocity = BodyComponent->GetPhysicsAngularVelocityInRadians();
 		auto AngularDrag = AngularDragCoefficient * - AngularVelocity.SizeSquared() * AngularVelocity.GetSafeNormal();
 		BodyComponent->AddTorqueInRadians(AngularDrag);
-		UE_LOG(LogTemp, Warning, TEXT("Torque: %s AngularVelocity: %s"), *AngularDrag.ToString(), *AngularVelocity.ToString());
 	}
 }
