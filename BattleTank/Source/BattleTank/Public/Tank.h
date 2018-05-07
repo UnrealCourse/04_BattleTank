@@ -37,7 +37,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	int32 StartingHealth = 100;
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	float DragCoefficient = 100;
+	float DragCoefficient = 0.04;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	float AngularDragCoefficient = 8000000.0;
 
 	UPROPERTY(VisibleAnywhere, Category = "Health")
 	int32 CurrentHealth; // Initialised in Begin Play

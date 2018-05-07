@@ -47,5 +47,10 @@ void ATank::Tick
 	if (BodyComponent)
 	{
 		BodyComponent->AddForce(Drag);
+
+		auto AngularVelocity = BodyComponent->GetPhysicsAngularVelocityInRadians();
+		auto AngularDrag = AngularDragCoefficient * - AngularVelocity.SizeSquared() * AngularVelocity.GetSafeNormal();
+		BodyComponent->AddTorqueInRadians(AngularDrag);
+		UE_LOG(LogTemp, Warning, TEXT("Torque: %s AngularVelocity: %s"), *AngularDrag.ToString(), *AngularVelocity.ToString());
 	}
 }
