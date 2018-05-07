@@ -5,6 +5,29 @@
 
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 
+
+FConstraintInstance NewSpring(float Stiffness, float Damping)
+{
+	FConstraintInstance Spring;
+	Spring.SetLinearZLimit(ELinearConstraintMotion::LCM_Free, 0);
+	Spring.SetAngularSwing1Limit(EAngularConstraintMotion::ACM_Locked, 0);
+	Spring.SetAngularSwing2Limit(EAngularConstraintMotion::ACM_Locked, 0);
+	Spring.SetAngularTwistLimit(EAngularConstraintMotion::ACM_Locked, 0);
+	Spring.SetLinearPositionDrive(false, false, true);
+	Spring.SetLinearVelocityDrive(false, false, true);
+	Spring.SetLinearDriveParams(Stiffness, Damping, 0);
+	return Spring;
+}
+
+FConstraintInstance NewAxel()
+{
+	FConstraintInstance Axel;
+	Axel.SetAngularSwing1Limit(EAngularConstraintMotion::ACM_Locked, 0);
+	Axel.SetAngularSwing2Limit(EAngularConstraintMotion::ACM_Free, 0);
+	Axel.SetAngularTwistLimit(EAngularConstraintMotion::ACM_Locked, 0);
+	return Axel;
+}
+
 // Sets default values for this component's properties
 UWheel::UWheel()
 {
@@ -16,6 +39,9 @@ UWheel::UWheel()
 	SetMassOverrideInKg(NAME_None, 1, true);
 	SetCollisionProfileName(TEXT("PhysicsActor"));
 	SetSimulatePhysics(true);
+
+	SuspensionConstraintSetup = NewSpring(40, 20);
+	AxleConstraintSetup = NewAxel();
 }
 
 void UWheel::AddForwardForce(float Force)
