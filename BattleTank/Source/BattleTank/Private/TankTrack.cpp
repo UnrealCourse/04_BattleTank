@@ -10,6 +10,11 @@ UTankTrack::UTankTrack()
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
+void UTankTrack::BeginPlay()
+{
+	Wheels = FindWheels();
+}
+
 void UTankTrack::SetThrottle(float Throttle)
 {
 	float CurrentThrottle = FMath::Clamp<float>(Throttle, -1, 1);
@@ -26,8 +31,27 @@ void UTankTrack::DriveTrack(float CurrentThrottle)
 	}
 }
 
+TArray<AWheel*> UTankTrack::FindWheels()
+{
+	TArray<USceneComponent*> Children;
+	GetChildrenComponents(true, Children);
+	TArray<AWheel*> OurWheels;
+	for (auto Child : Children)
+	{
+		auto ChildActorComponent = Cast<UChildActorComponent>(Child);
+		if (!ChildActorComponent) continue;
+		auto Wheel = Cast<AWheel>(ChildActorComponent->GetChildActor());
+		if (!Wheel) continue;
+		OurWheels.Add(Wheel);
+	}
+	return OurWheels;
+}
+
 void UTankTrack::OnChildAttached(USceneComponent * ChildComponent)
 {
 	AWheel* Wheel = Cast<AWheel>(ChildComponent);
-	Wheels.Add(Wheel);
+	if (Wheel)
+	{
+		Wheels.Add(Wheel);
+	}
 }

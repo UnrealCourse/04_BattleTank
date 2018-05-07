@@ -14,6 +14,8 @@ class BATTLETANK_API UTankTrack : public UStaticMeshComponent
 	GENERATED_BODY()
 	
 public:
+	void BeginPlay() override;
+
 	// Sets a throttle between -1 and +1
 	UFUNCTION(BlueprintCallable, Category = "Input")
 	void SetThrottle(float Throttle);
@@ -27,6 +29,8 @@ private:
 	UTankTrack();
 
 	void DriveTrack(float CurrentThrottle);
+
+	TArray<class AWheel*> FindWheels();
 
 	UPROPERTY()
 	TArray<class AWheel*> Wheels;

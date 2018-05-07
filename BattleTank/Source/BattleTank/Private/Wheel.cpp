@@ -58,7 +58,7 @@ void AWheel::BeginPlay()
 	Wheel->SetNotifyRigidBodyCollision(true);
 	Wheel->OnComponentHit.AddDynamic(this, &AWheel::OnHit);
 
-	auto ParentRootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+	auto ParentRootComponent = Cast<UPrimitiveComponent>(GetParentActor()->GetRootComponent());
 	if (ParentRootComponent)
 	{
 		SuspensionConstraint = NewConstraint(ParentRootComponent, NewSpring(Stiffness, Damping), ParentRootComponent, Axle);
