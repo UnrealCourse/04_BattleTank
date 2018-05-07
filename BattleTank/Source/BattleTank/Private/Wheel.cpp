@@ -39,9 +39,6 @@ UWheel::UWheel()
 	SetMassOverrideInKg(NAME_None, 1, true);
 	SetCollisionProfileName(TEXT("PhysicsActor"));
 	SetSimulatePhysics(true);
-
-	SuspensionConstraintSetup = NewSpring(40, 20);
-	AxleConstraintSetup = NewAxel();
 }
 
 void UWheel::AddForwardForce(float Force)
@@ -63,8 +60,8 @@ void UWheel::BeginPlay()
 	auto RootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
 	if (RootComponent)
 	{
-		SuspensionConstraint = NewConstraint(RootComponent, SuspensionConstraintSetup, RootComponent, Axle);
-		AxleConstraint = NewConstraint(RootComponent, AxleConstraintSetup, Axle, this);
+		SuspensionConstraint = NewConstraint(RootComponent, NewSpring(Stiffness, Damping), RootComponent, Axle);
+		AxleConstraint = NewConstraint(RootComponent, NewAxel(), Axle, this);
 	}
 }
 

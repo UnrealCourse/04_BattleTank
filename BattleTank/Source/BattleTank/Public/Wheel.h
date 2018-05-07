@@ -36,10 +36,11 @@ private:
 	//config
 	UPROPERTY(EditAnywhere)
 	float DrivingFriction = 1;
-	UPROPERTY(EditDefaultsOnly) 
-	FConstraintInstance SuspensionConstraintSetup;
-	UPROPERTY(EditDefaultsOnly) 
-	FConstraintInstance AxleConstraintSetup;
+	UPROPERTY(EditDefaultsOnly)
+	float Stiffness = 40;
+	UPROPERTY(EditDefaultsOnly)
+	float Damping = 20;
+
 
 	//references
 	UPROPERTY(VisibleAnywhere)
