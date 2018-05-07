@@ -34,3 +34,18 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEv
 	}
 	return DamageToApply;
 }
+
+void ATank::Tick
+(
+	float DeltaSeconds
+)
+{
+	Super::Tick(DeltaSeconds);
+
+	auto Drag = DragCoefficient * -GetVelocity();
+	auto BodyComponent = Cast<UPrimitiveComponent>(GetRootComponent());
+	if (BodyComponent)
+	{
+		BodyComponent->AddForce(Drag);
+	}
+}

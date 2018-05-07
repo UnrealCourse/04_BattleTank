@@ -103,7 +103,7 @@ void UWheel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimi
 
 	
 
-	UE_LOG(LogTemp, Warning, TEXT("HIT: NormalImpulse %f Normal %f ImpactNormal %f"), NormalImpulse.Size(), Hit.Normal.Size(), Hit.ImpactNormal.Size())
+	UE_LOG(LogTemp, Warning, TEXT("HIT: RequestedForce %f CappedForce %f ImpactNormal %f"), RequestedForce, CappedForce)
 }
 
 void UWheel::TickComponent
