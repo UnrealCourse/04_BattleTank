@@ -29,5 +29,5 @@ private:
 	void DriveTrack(float CurrentThrottle);
 
 	UPROPERTY()
-	TArray<class UWheel*> Wheels;
+	TArray<class AWheel*> Wheels;
 };

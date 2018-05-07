@@ -20,7 +20,7 @@ void UTankTrack::DriveTrack(float CurrentThrottle)
 {
 	float TotalForce = CurrentThrottle * TrackMaxDrivingForce;
 	float WheelForce = TotalForce / Wheels.Num();
-	for (UWheel* Wheel : Wheels)
+	for (AWheel* Wheel : Wheels)
 	{
 		Wheel->AddForwardForce(WheelForce);
 	}
@@ -28,6 +28,6 @@ void UTankTrack::DriveTrack(float CurrentThrottle)
 
 void UTankTrack::OnChildAttached(USceneComponent * ChildComponent)
 {
-	UWheel* Wheel = Cast<UWheel>(ChildComponent);
+	AWheel* Wheel = Cast<AWheel>(ChildComponent);
 	Wheels.Add(Wheel);
 }

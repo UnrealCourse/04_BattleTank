@@ -3,24 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SceneComponent.h"
+#include "GameFramework/Actor.h"
 #include "PhysicsEngine/ConstraintInstance.h"
 
 #include "Wheel.generated.h"
 
 UCLASS( ClassGroup=(Custom), Blueprintable, meta=(BlueprintSpawnableComponent) )
-class BATTLETANK_API UWheel : public USphereComponent
+class BATTLETANK_API AWheel : public AActor
 {
 	GENERATED_BODY()
 
 public:	
 	// Sets default values for this component's properties
-	UWheel();
-	virtual void TickComponent
+	AWheel();
+	virtual void Tick
 	(
-		float DeltaTime,
-		enum ELevelTick TickType,
-		FActorComponentTickFunction * ThisTickFunction
+		float DeltaTime
 	) override;
 
 	void AddForwardForce(float Force);
@@ -59,6 +57,8 @@ private:
 	UPhysicsConstraintComponent* SuspensionConstraint;
 	UPROPERTY(VisibleAnywhere)
 	UPhysicsConstraintComponent* AxleConstraint;
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent *Wheel;
 
 	//state
 	float RequestedForce = 0;

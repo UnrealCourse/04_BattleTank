@@ -29,54 +29,55 @@ FConstraintInstance NewAxel()
 }
 
 // Sets default values for this component's properties
-UWheel::UWheel()
+AWheel::AWheel()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-	PrimaryComponentTick.TickGroup = TG_PostPhysics;
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickGroup = TG_PostPhysics;
 
 	// Set mass to 1kg
-	SetMassOverrideInKg(NAME_None, 1, true);
-	SetCollisionProfileName(TEXT("PhysicsActor"));
-	SetSimulatePhysics(true);
+	Wheel = CreateDefaultSubobject<USphereComponent>(TEXT("Wheel"));
+	Wheel->SetMassOverrideInKg(NAME_None, 1, true);
+	Wheel->SetCollisionProfileName(TEXT("PhysicsActor"));
+	Wheel->SetSimulatePhysics(true);
 }
 
-void UWheel::AddForwardForce(float Force)
+void AWheel::AddForwardForce(float Force)
 {
 	RequestedForce += Force;
 }
 
 // Called when the game starts
-void UWheel::BeginPlay()
+void AWheel::BeginPlay()
 {
 	Super::BeginPlay();
 
 	SetupAxle();
 
-	SetNotifyRigidBodyCollision(true);
-	OnComponentHit.AddDynamic(this, &UWheel::OnHit);
+	Wheel->SetNotifyRigidBodyCollision(true);
+	Wheel->OnComponentHit.AddDynamic(this, &AWheel::OnHit);
 
-	auto RootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
-	if (RootComponent)
+	auto ParentRootComponent = Cast<UPrimitiveComponent>(GetOwner()->GetRootComponent());
+	if (ParentRootComponent)
 	{
-		SuspensionConstraint = NewConstraint(RootComponent, NewSpring(Stiffness, Damping), RootComponent, Axle);
-		AxleConstraint = NewConstraint(RootComponent, NewAxel(), Axle, this);
+		SuspensionConstraint = NewConstraint(ParentRootComponent, NewSpring(Stiffness, Damping), ParentRootComponent, Axle);
+		AxleConstraint = NewConstraint(ParentRootComponent, NewAxel(), Axle, Wheel);
 	}
 }
 
-void UWheel::SetupAxle()
+void AWheel::SetupAxle()
 {
 	Axle = NewObject<USphereComponent>(this);
 	Axle->RegisterComponent();
 
-	Axle->SetWorldLocation(GetComponentLocation());
+	Axle->SetWorldLocation(Wheel->GetComponentLocation());
 	Axle->SetSimulatePhysics(true);
 	Axle->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	Axle->SetMassOverrideInKg(NAME_None, 1, true);
 }
 
-UPhysicsConstraintComponent* UWheel::NewConstraint(
+UPhysicsConstraintComponent* AWheel::NewConstraint(
 	UPrimitiveComponent* RootComponent,
 	const FConstraintInstance& ConstraintSetup,
 	UPrimitiveComponent* Component1,
@@ -86,7 +87,7 @@ UPhysicsConstraintComponent* UWheel::NewConstraint(
 	Constraint->RegisterComponent();
 
 	Constraint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	Constraint->SetWorldLocation(GetComponentLocation());
+	Constraint->SetWorldLocation(Wheel->GetComponentLocation());
 
 	Constraint->ConstraintInstance = ConstraintSetup;
 
@@ -95,18 +96,16 @@ UPhysicsConstraintComponent* UWheel::NewConstraint(
 }
 
 
-void UWheel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AWheel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	float MaxForce = DrivingFriction * NormalImpulse.Size();
 	float CappedForce = FMath::Clamp(RequestedForce, -MaxForce, MaxForce);
-	AddForce(Axle->GetRightVector() ^ Hit.Normal * CappedForce);
+	Wheel->AddForce(Axle->GetRightVector() ^ Hit.Normal * CappedForce);
 }
 
-void UWheel::TickComponent
+void AWheel::Tick
 (
-	float DeltaTime,
-	enum ELevelTick TickType,
-	FActorComponentTickFunction * ThisTickFunction
+	float DeltaTime
 )
 {
 	if (GetWorld()->TickGroup == TG_PostPhysics)
