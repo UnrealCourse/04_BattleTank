@@ -100,10 +100,7 @@ void UWheel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimi
 	float MaxForce = DrivingFriction * NormalImpulse.Size();
 	float CappedForce = FMath::Clamp(RequestedForce, -MaxForce, MaxForce);
 	AddForce(Axle->GetRightVector() ^ Hit.Normal * CappedForce);
-
-	
-
-	UE_LOG(LogTemp, Warning, TEXT("HIT: RequestedForce %f CappedForce %f ImpactNormal %f"), RequestedForce, CappedForce)
+	UE_LOG(LogTemp, Warning, TEXT("Capped FOrce %f"), CappedForce);
 }
 
 void UWheel::TickComponent

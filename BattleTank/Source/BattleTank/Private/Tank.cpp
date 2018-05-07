@@ -42,7 +42,7 @@ void ATank::Tick
 {
 	Super::Tick(DeltaSeconds);
 
-	auto Drag = DragCoefficient * -GetVelocity();
+	auto Drag = DragCoefficient * - GetVelocity().SizeSquared() * GetVelocity().GetSafeNormal();
 	auto BodyComponent = Cast<UPrimitiveComponent>(GetRootComponent());
 	if (BodyComponent)
 	{
