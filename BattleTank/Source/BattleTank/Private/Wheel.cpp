@@ -37,10 +37,24 @@ AWheel::AWheel()
 	PrimaryActorTick.TickGroup = TG_PostPhysics;
 
 	// Set mass to 1kg
+
+	RootComponent = CreateDefaultSubobject<USceneComponent>("Root");
+
 	Wheel = CreateDefaultSubobject<USphereComponent>(TEXT("Wheel"));
+	Wheel->SetupAttachment(RootComponent);
 	Wheel->SetMassOverrideInKg(NAME_None, 1, true);
 	Wheel->SetCollisionProfileName(TEXT("PhysicsActor"));
 	Wheel->SetSimulatePhysics(true);
+
+	SetupAxle();
+
+	SuspensionConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("SuspensionConstraint"));
+	SuspensionConstraint->SetupAttachment(RootComponent);
+	SuspensionConstraint->ConstraintInstance = NewSpring(Stiffness, Damping);
+
+	AxleConstraint = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("AxleConstraint"));
+	AxleConstraint->SetupAttachment(RootComponent);
+	AxleConstraint->ConstraintInstance = NewAxel();
 }
 
 void AWheel::AddForwardForce(float Force)
@@ -53,48 +67,26 @@ void AWheel::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetupAxle();
-
 	Wheel->SetNotifyRigidBodyCollision(true);
 	Wheel->OnComponentHit.AddDynamic(this, &AWheel::OnHit);
 
 	auto ParentRootComponent = Cast<UPrimitiveComponent>(GetParentActor()->GetRootComponent());
 	if (ParentRootComponent)
 	{
-		SuspensionConstraint = NewConstraint(ParentRootComponent, NewSpring(Stiffness, Damping), ParentRootComponent, Axle);
-		AxleConstraint = NewConstraint(ParentRootComponent, NewAxel(), Axle, Wheel);
+		SuspensionConstraint->SetConstrainedComponents(ParentRootComponent, NAME_None, Axle, NAME_None);
+		AxleConstraint->SetConstrainedComponents(Axle, NAME_None, Wheel, NAME_None);
 	}
 }
 
 void AWheel::SetupAxle()
 {
-	Axle = NewObject<USphereComponent>(this);
-	Axle->RegisterComponent();
+	Axle = CreateDefaultSubobject<USphereComponent>("Axle");
+	Axle->SetupAttachment(RootComponent);
 
-	Axle->SetWorldLocation(Wheel->GetComponentLocation());
 	Axle->SetSimulatePhysics(true);
 	Axle->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	Axle->SetMassOverrideInKg(NAME_None, 1, true);
 }
-
-UPhysicsConstraintComponent* AWheel::NewConstraint(
-	UPrimitiveComponent* RootComponent,
-	const FConstraintInstance& ConstraintSetup,
-	UPrimitiveComponent* Component1,
-	UPrimitiveComponent* Component2) 
-{
-	auto Constraint = NewObject<UPhysicsConstraintComponent>(this);
-	Constraint->RegisterComponent();
-
-	Constraint->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	Constraint->SetWorldLocation(Wheel->GetComponentLocation());
-
-	Constraint->ConstraintInstance = ConstraintSetup;
-
-	Constraint->SetConstrainedComponents(Component1, NAME_None, Component2, NAME_None);
-	return Constraint;
-}
-
 
 void AWheel::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {

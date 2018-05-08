@@ -30,20 +30,13 @@ protected:
 private:
 	void SetupAxle();
 
-	UPhysicsConstraintComponent * NewConstraint(
-		UPrimitiveComponent* RootComponent, 
-		const FConstraintInstance& ConstraintSetup, 
-		UPrimitiveComponent* Component1, 
-		UPrimitiveComponent* Component2
-	);
-
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 
 	//config
 	UPROPERTY(EditAnywhere)
-	float DrivingFriction = 1;
+	float DrivingFriction = 100;
 	UPROPERTY(EditDefaultsOnly)
 	float Stiffness = 40;
 	UPROPERTY(EditDefaultsOnly)
@@ -53,9 +46,9 @@ private:
 	//references
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent* Axle;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Instanced)
 	UPhysicsConstraintComponent* SuspensionConstraint;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Instanced)
 	UPhysicsConstraintComponent* AxleConstraint;
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent *Wheel;
