@@ -758,3 +758,16 @@ In this section we covered...
 + Add a 1st person camera
 + Use the Toggle Visibility Blueprint node
 + Bind input and enjoy simple camera swapping.
+
+### 101 Upgrade to 4.19 And Bug Fixes ###
+
+**In this video (objectives)…**
+
+1. Update the project.
+2. Fix any build errors.
+3. Fix any bad log messages.
+
+
+**After watching (learning outcomes)…**
+
+Can upgrade your own projects to 4.19.
