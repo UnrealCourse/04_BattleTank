@@ -767,7 +767,19 @@ In this section we covered...
 2. Fix any build errors.
 3. Fix any bad log messages.
 
-
 **After watching (learning outcomes)…**
 
 Can upgrade your own projects to 4.19.
+
+
+### 102 Real-world Vehicle Physics ###
+
+**In this video (objectives)…**
+
+1. Discuss why the tank pops.
+2. Identify why real world vehicles don't.
+3. Create a physics model for our tank.
+
+**After watching (learning outcomes)…**
+
+Explain how to model a vehicle in a physics engine.
