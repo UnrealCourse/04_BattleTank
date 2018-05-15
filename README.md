@@ -808,3 +808,15 @@ Create a physics constraint between two components and set limits.
 **After watching (learning outcomes)…**
 
 Create a spring using the `UPhysicsConstraintComponent` and linear drives.
+
+### 105 Converting The Spring To C++ ###
+
+**In this video (objectives)…**
+
+1. Create a base class.
+2. Create all components.
+3. Configure the blueprint.
+
+**After watching (learning outcomes)…**
+
+Create Blueprint children of C++ classes derived from `AActor`.
