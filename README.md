@@ -832,3 +832,14 @@ Create Blueprint children of C++ classes derived from `AActor`.
 **After watching (learning outcomes)…**
 
 Understand component versus actor childing.
+
+### 107 SpawnActorDeferred and BeginPlay ###
+
+**In this video (objectives)…**
+
+1. Spawning and `BeginPlay`.
+2. Using `SpawnActorDeferred`.
+
+**After watching (learning outcomes)…**
+
+Able to spawn actors using `SpawnActorDeferred` and know when it's needed.
