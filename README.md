@@ -820,3 +820,15 @@ Create a spring using the `UPhysicsConstraintComponent` and linear drives.
 **After watching (learning outcomes)…**
 
 Create Blueprint children of C++ classes derived from `AActor`.
+
+### 106 Attachment, Actors and Components ###
+
+**In this video (objectives)…**
+
+1. Attachment with actors and components.
+2. Using `GetAttachParentActor`.
+3. Creating a spawning component.
+
+**After watching (learning outcomes)…**
+
+Understand component versus actor childing.
