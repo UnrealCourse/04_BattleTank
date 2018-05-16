@@ -843,3 +843,18 @@ Understand component versus actor childing.
 **After watching (learning outcomes)…**
 
 Able to spawn actors using `SpawnActorDeferred` and know when it's needed.
+
+### 108 Attaching Constraints In C++ ###
+
+**In this video (objectives)…**
+
+1. Remove the mass.
+2. Introducing `SetConstrainedComponents`
+3. Set constraint to the tank root.
+4. Add more wheels.
+5. Tweak the spring parameters.
+
+
+**After watching (learning outcomes)…**
+
+Setup constraints between actors in C++.
