@@ -858,3 +858,18 @@ Able to spawn actors using `SpawnActorDeferred` and know when it's needed.
 **After watching (learning outcomes)…**
 
 Setup constraints between actors in C++.
+
+### 109 Chaining Physics Constraints ###
+
+**In this video (objectives)…**
+
+1. Chaining constraints together.
+2. Setup the new Axle and its contraint.
+3. Why we need a collider to simulate physics.
+4. Using `USphereComponent`s.
+5. Disabling collisions on the Axle.
+6. Constraining the wheel rotation.
+
+**After watching (learning outcomes)…**
+
+How to chain constraints together.
