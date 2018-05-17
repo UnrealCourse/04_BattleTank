@@ -894,3 +894,16 @@ Continued...
 
 6. Add getter to the `SpawnPoint`.
 7. Implementing `GetWheels()`.
+
+### 112 Tick Groups And Physics ###
+
+**In this video (objectives)…**
+
+1. Detecting no collision.
+2. Understanding Tick Groups and their order.
+3. When does `OnHit` get called?
+4. Apply force on collision or reset.
+
+**After watching (learning outcomes)…**
+
+An understanding of the Tick Group Order and how it interacts with physics notifications.
