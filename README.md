@@ -883,10 +883,14 @@ How to chain constraints together.
 3. Update `DriveTrack()` to apply for all wheels.
 4. Remove `OnHit()` and `ApplySidewaysForce()`.
 5. How to iterate over child components.
-6. Add getter to the `SpawnPoint`.
-7. Implementing `GetWheels()`.
-
 
 **After watching (learning outcomes)…**
 
 Iterate over child components.
+
+### 111 Solution: Implement GetWheels() ###
+
+Continued...
+
+6. Add getter to the `SpawnPoint`.
+7. Implementing `GetWheels()`.
