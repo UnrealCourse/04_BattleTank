@@ -921,3 +921,7 @@ An understanding of the Tick Group Order and how it interacts with physics notif
 **After watching (learning outcomes)…**
 
 Understand how damping affects the tank.
+
+### 114 BONUS: Fixing Collider Issues ###
+
+How to workaround the "ConvexElem Invalid" errors.
