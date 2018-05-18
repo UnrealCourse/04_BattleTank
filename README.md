@@ -907,3 +907,17 @@ Continued...
 **After watching (learning outcomes)…**
 
 An understanding of the Tick Group Order and how it interacts with physics notifications.
+
+### 113 Tweaking Linear & Angular Damping ###
+
+**In this video (objectives)…**
+
+1. Making a testing level.
+2. Changing linear damping.
+3. Tweak linear damping.
+4. Tweak angular damping.
+5. Add more wheels.
+
+**After watching (learning outcomes)…**
+
+Understand how damping affects the tank.
