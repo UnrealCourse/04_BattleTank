@@ -767,6 +767,12 @@ In this section we covered...
 + Use the Toggle Visibility Blueprint node
 + Bind input and enjoy simple camera swapping.
 
+### 100b Fixing The Tank Suspension ###
+
++ Why the suspension is broken.
++ How we will fix it with a suspension.
++ Overview of how suspension works.
+
 ### 101 Upgrade to 4.19 And Bug Fixes ###
 
 **In this video (objectives)…**
