@@ -308,14 +308,14 @@ You're welcome to download, fork or do whatever else legal with all the files! T
 + Use **BlueprintSpawnableComponent** annotation
 + Using **hidecategories = ("CategoryName")**
 
-### 38 Review Our Execution Flow ###
+### 40 Review Our Execution Flow ###
 
 + How to disable or enable tick on various classes
 + **GetWorld()->GetTimeSeconds()** for logging
 + Documenting your execution flow for clarity
 + Change parameter names for clarity.
 
-### 39 How to Report Bugs ###
+### 41 How to Report Bugs ###
 
 + If something’s weird break it down
 + Use logs or the debugger to follow each step
@@ -327,7 +327,7 @@ You're welcome to download, fork or do whatever else legal with all the files! T
 
 + \* [UE4 Answer Hub - SuggestProjectileVelocity() Behaving Badly](https://answers.unrealengine.com/questions/435995/suggestprojectilevelocity-behaving-badly.html)
 
-### 40 Using Clamp() to Limit Values ###
+### 42 Using Clamp() to Limit Values ###
 
 + **FMath::Clamp\<type\>(Input, Min, Max);**
 + Very useful for restricting value ranges
